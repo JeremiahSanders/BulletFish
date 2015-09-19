@@ -27,8 +27,8 @@ public class PlayerMachine : MonoBehaviour {
     private PlayerStates CurrentState = PlayerStates.AtRest;
 
     public GameObject FishModel;
-    private static float IntensityDecreaseRate = 5f;
-    private static float IntensityIncreaseRate = 15f;
+    private static float IntensityDecreaseRate = 3.2f;
+    private static float IntensityIncreaseRate = 8.2f;
     private static float MaxIntensity = 50;
     private static float MaxLungCapacity = 150f;
     private static float RateOfBreathReplenishment = 25f;
