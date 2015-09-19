@@ -12,6 +12,7 @@ public class GameMachine : MonoBehaviour {
         Debug.Log(String.Format("2nd Place - {0}", _winners[1]));
         Debug.Log(String.Format("3rd Place - {0}", _winners[2]));
         Debug.Log(String.Format("4th Place - {0}", _winners[3]));
+        Application.LoadLevel("Score Scene_003");
     }
 
     public void ReachedFinishLine(PlayerMachine.PlayerIdentifier player)
