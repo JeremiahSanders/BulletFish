@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,23 +16,46 @@ public class PlayerMachine : MonoBehaviour {
         Blowing = 1
     }
 
+    private const float IntensityDecreaseRate = 3.2f;
+    private const float IntensityIncreaseRate = 8.2f;
+    private const float MaxIntensity = 50;
+    private const float MaxLungCapacity = 150f;
+
     public const string Player1Button = "Player1";
     public const string Player2Button = "Player2";
     public const string Player3Button = "Player3";
     public const string Player4Button = "Player4";
+    private const float RateOfBreathReplenishment = 75f;
+    private static readonly Dictionary<PlayerStates, PlayerState> StateLookup;
+
+    private  PlayerStates CurrentState {get { return CurrentPlayerState.State; } }
     public Text BreathDisplay;
     public PlayerIdentifier Control = PlayerIdentifier.Player1;
-    public float CurrentBreathPressure;
-    public float CurrentLungCapacity = 150f;
 
-    private PlayerStates CurrentState = PlayerStates.AtRest;
+    private PlayerState CurrentPlayerState = StateLookup[PlayerStates.AtRest];
+    private float CurrentRawBreathPressure;
 
     public GameObject FishModel;
-    private static float IntensityDecreaseRate = 3.2f;
-    private static float IntensityIncreaseRate = 8.2f;
-    private static float MaxIntensity = 50;
-    private static float MaxLungCapacity = 150f;
-    private static float RateOfBreathReplenishment = 25f;
+
+    static PlayerMachine()
+    {
+        StateLookup = new Dictionary<PlayerStates, PlayerState> {
+                                                                    {PlayerStates.Blowing, new BlowingState()},
+                                                                    {PlayerStates.AtRest, new AtRestState()}
+                                                                };
+    }
+
+    public float CurrentBreathPressure
+    {
+        get { return CurrentRawBreathPressure <= 0 ? 0 : CurrentRawBreathPressure/MaxIntensity; }
+    }
+
+    public float CurrentLungCapacity { get; private set; }
+
+    public bool IsBlowing
+    {
+        get { return CurrentState == PlayerStates.Blowing; }
+    }
 
     private static string GetButtonCode(PlayerIdentifier player)
     {
@@ -49,49 +73,115 @@ public class PlayerMachine : MonoBehaviour {
         }
     }
 
-    private void MoveFishModel()
-    {
-        if (FishModel != null && CurrentBreathPressure > 0) {
-            FishModel.transform.Translate(0, 0, CurrentBreathPressure*Time.deltaTime);
-        }
-    }
 
     // Use this for initialization
-    private void Start() {}
+    private void Start()
+    {
+        CurrentLungCapacity = MaxLungCapacity;
+    }
 
     // Update is called once per frame
     private void Update()
     {
         var buttonVal = Input.GetButton(GetButtonCode(Control));
-        if (buttonVal) {
-            if (CurrentState == PlayerStates.AtRest) {
-                CurrentState = PlayerStates.Blowing;
-            }
-        }
-        else {
-            CurrentState = PlayerStates.AtRest;
-        }
-        UpdateBreathPressure();
-        MoveFishModel();
+        var desiredState = buttonVal ? PlayerStates.Blowing : PlayerStates.AtRest;
+        CurrentPlayerState.ChangePlayerState(this, desiredState);
+        CurrentPlayerState.Act(this);
+        //if (buttonVal) {
+        //    if (CurrentState == PlayerStates.AtRest) {
+        //        CurrentState = PlayerStates.Blowing;
+        //    }
+        //}
+        //else {
+        //    CurrentState = PlayerStates.AtRest;
+        //}
+        //UpdateBreathPressure();
+        //UpdateLungCapacity();
         UpdateHud();
     }
 
     private void UpdateBreathPressure()
     {
         if (CurrentState == PlayerStates.Blowing) {
-            CurrentBreathPressure += IntensityIncreaseRate*Time.deltaTime;
+            CurrentRawBreathPressure += IntensityIncreaseRate*Time.deltaTime;
         }
         else {
-            CurrentBreathPressure -= IntensityDecreaseRate*Time.deltaTime;
+            CurrentRawBreathPressure -= IntensityDecreaseRate*Time.deltaTime;
         }
-        CurrentBreathPressure = Mathf.Clamp(CurrentBreathPressure, 0, MaxIntensity);
+        CurrentRawBreathPressure = Mathf.Clamp(CurrentRawBreathPressure, 0, MaxIntensity);
     }
 
     private void UpdateHud()
     {
         if (BreathDisplay != null) {
-            BreathDisplay.text = String.Format("{0}/{1} | {2}", CurrentLungCapacity, MaxLungCapacity,
+            BreathDisplay.text = String.Format("{2:P}", CurrentLungCapacity, MaxLungCapacity,
                 CurrentBreathPressure);
         }
+    }
+
+    private void UpdateLungCapacity()
+    {
+        if (CurrentState == PlayerStates.AtRest) {
+            CurrentLungCapacity += RateOfBreathReplenishment*Time.deltaTime;
+        }
+        else if (CurrentState == PlayerStates.Blowing) {
+            CurrentLungCapacity -= CurrentRawBreathPressure;
+        }
+        CurrentLungCapacity = Mathf.Clamp(CurrentLungCapacity, 0, MaxLungCapacity);
+    }
+
+    private class AtRestState : PlayerState {
+        private const float percentageReducedWhileResting = 2.5f;
+
+        public override PlayerStates State
+        {
+            get { return PlayerStates.AtRest; }
+        }
+
+        public override void Act(PlayerMachine player)
+        {
+            player.CurrentRawBreathPressure = Mathf.Clamp(
+                player.CurrentRawBreathPressure - (percentageReducedWhileResting*Time.deltaTime), 0,
+                MaxIntensity);
+        }
+    }
+
+    private class BlowingState : PlayerState {
+        private const float additionalBlowValue = 24.8f;
+
+        public override PlayerStates State
+        {
+            get { return PlayerStates.Blowing; }
+        }
+
+        public override void Act(PlayerMachine player)
+        {
+            // they're holding down the button ...
+            StateLookup[PlayerStates.AtRest].Act(player);
+        }
+
+        protected override void TransitionIntoState(PlayerMachine player)
+        {
+            player.CurrentRawBreathPressure =
+                Mathf.Clamp(player.CurrentRawBreathPressure + (additionalBlowValue*Time.deltaTime), 0,
+                    MaxIntensity);
+        }
+    }
+
+    private abstract class PlayerState {
+        public abstract PlayerStates State { get; }
+
+        public virtual void Act(PlayerMachine player) {}
+
+        public void ChangePlayerState(PlayerMachine player, PlayerStates desiredState)
+        {
+            if (desiredState == State) return;
+            TransitionOutOfState(player);
+            TransitionIntoState(player);
+            player.CurrentPlayerState = StateLookup[desiredState];
+        }
+
+        protected virtual void TransitionIntoState(PlayerMachine player) {}
+        protected virtual void TransitionOutOfState(PlayerMachine player) {}
     }
 }
