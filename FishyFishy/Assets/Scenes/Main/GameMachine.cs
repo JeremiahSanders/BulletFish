@@ -2,10 +2,17 @@
 using UnityEngine;
 
 public class GameMachine : MonoBehaviour {
+    public GameObject AudioManagerSource;
+
     static GameMachine()
     {
         PlayerCount = 4;
         Winners = new List<PlayerMachine.PlayerIdentifier>();
+    }
+
+    private AudioMachine AudioSource
+    {
+        get { return AudioManagerSource != null ? AudioManagerSource.GetComponent<AudioMachine>() : null; }
     }
 
     public static int PlayerCount { get; set; }
@@ -36,4 +43,10 @@ public class GameMachine : MonoBehaviour {
 
     // Update is called once per frame
     private void Update() {}
+
+    private abstract class GameState {
+        protected virtual void Act(GameMachine machine) {}
+        protected virtual void TransitionIn(GameMachine machine) {}
+        protected virtual void TransitionOut(GameMachine machine) {}
+    }
 }
