@@ -53,7 +53,7 @@ public class PlayerMachine : MonoBehaviour {
 
     public bool IsBlowing
     {
-        get { return CurrentState == PlayerStates.Blowing && CurrentLungCapacity > 5f; }
+        get { return CurrentState == PlayerStates.Blowing && CurrentLungCapacity > 0.05f; }
     }
 
     public float LungCapacityPercentage
