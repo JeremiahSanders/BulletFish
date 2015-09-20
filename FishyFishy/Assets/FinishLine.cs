@@ -29,7 +29,7 @@ public class FinishLine : MonoBehaviour {
         if (IsFish(other.gameObject)) {
             Debug.Log("finish line detected fish");
             GameMachine.ReachedFinishLine(other.gameObject.GetComponent<FishMachine>().Player);
-            Destroy(other.gameObject);
+            //Destroy(other.gameObject);
         }
     }
 

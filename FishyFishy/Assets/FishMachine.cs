@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 
 public class FishMachine : MonoBehaviour {
-    private const float BASE_SPEED = 0.15f;
+    private const float BASE_SPEED = 0.045f;
     private const float MAX_SPEED = 8f;
     private const float SLOWDOWN_RATE = 0.27f;
     private float _currentSpeed;
     public GameObject PlayerController;
+
+    private bool shouldMove = true;
+    public GameObject SwimLane;
 
     public PlayerMachine.PlayerIdentifier Player
     {
@@ -30,7 +33,7 @@ public class FishMachine : MonoBehaviour {
     private float GetBlowingSpeedModifier(PlayerMachine pm)
     {
         const float blowingEffectPercentage = 0.64f;
-        const float blowingFactor = 5f;
+        const float blowingFactor = 3.4f;
         const float fearThreshold = 0.85f;
         return pm.CurrentBreathPressure > fearThreshold
             ? (BASE_SPEED*blowingEffectPercentage)*-1
@@ -50,6 +53,10 @@ public class FishMachine : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("fish detected OnTriggerEnter");
+        if (other.gameObject != null && other.gameObject.GetComponent<FinishLine>() != null) {
+            // reached the finish line
+            shouldMove = false;
+        }
     }
 
     // Use this for initialization
@@ -57,8 +64,9 @@ public class FishMachine : MonoBehaviour {
     // Update is called once per frame
     private void Update()
     {
+        if (!shouldMove) return;
         var newSpeed = CreateSpeed();
-        transform.Translate(0, 0, newSpeed);
+        SwimLane.transform.Translate(0, newSpeed, 0);
         _currentSpeed = newSpeed;
     }
 }

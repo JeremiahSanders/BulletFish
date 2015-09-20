@@ -16,19 +16,14 @@ public class PlayerMachine : MonoBehaviour {
         Blowing = 1
     }
 
-    private const float IntensityDecreaseRate = 3.2f;
-    private const float IntensityIncreaseRate = 8.2f;
-    private const float MaxIntensity = 50;
-    private const float MaxLungCapacity = 150f;
+    private const float MaxIntensity = 33.3f;
+    private const float MaxLungCapacity = 57.2f;
 
     public const string Player1Button = "Player1";
     public const string Player2Button = "Player2";
     public const string Player3Button = "Player3";
     public const string Player4Button = "Player4";
-    private const float RateOfBreathReplenishment = 75f;
     private static readonly Dictionary<PlayerStates, PlayerState> StateLookup;
-
-    private  PlayerStates CurrentState {get { return CurrentPlayerState.State; } }
     public Text BreathDisplay;
     public PlayerIdentifier Control = PlayerIdentifier.Player1;
 
@@ -52,9 +47,19 @@ public class PlayerMachine : MonoBehaviour {
 
     public float CurrentLungCapacity { get; private set; }
 
+    private PlayerStates CurrentState
+    {
+        get { return CurrentPlayerState.State; }
+    }
+
     public bool IsBlowing
     {
-        get { return CurrentState == PlayerStates.Blowing; }
+        get { return CurrentState == PlayerStates.Blowing && CurrentLungCapacity > 5f; }
+    }
+
+    public float LungCapacityPercentage
+    {
+        get { return CurrentLungCapacity/MaxLungCapacity; }
     }
 
     private static string GetButtonCode(PlayerIdentifier player)
@@ -87,51 +92,20 @@ public class PlayerMachine : MonoBehaviour {
         var desiredState = buttonVal ? PlayerStates.Blowing : PlayerStates.AtRest;
         CurrentPlayerState.ChangePlayerState(this, desiredState);
         CurrentPlayerState.Act(this);
-        //if (buttonVal) {
-        //    if (CurrentState == PlayerStates.AtRest) {
-        //        CurrentState = PlayerStates.Blowing;
-        //    }
-        //}
-        //else {
-        //    CurrentState = PlayerStates.AtRest;
-        //}
-        //UpdateBreathPressure();
-        //UpdateLungCapacity();
         UpdateHud();
     }
 
-    private void UpdateBreathPressure()
-    {
-        if (CurrentState == PlayerStates.Blowing) {
-            CurrentRawBreathPressure += IntensityIncreaseRate*Time.deltaTime;
-        }
-        else {
-            CurrentRawBreathPressure -= IntensityDecreaseRate*Time.deltaTime;
-        }
-        CurrentRawBreathPressure = Mathf.Clamp(CurrentRawBreathPressure, 0, MaxIntensity);
-    }
 
     private void UpdateHud()
     {
         if (BreathDisplay != null) {
-            BreathDisplay.text = String.Format("{2:P}", CurrentLungCapacity, MaxLungCapacity,
-                CurrentBreathPressure);
+            BreathDisplay.text = String.Format("{1:P0} / {0:P0}", LungCapacityPercentage, CurrentBreathPressure);
         }
-    }
-
-    private void UpdateLungCapacity()
-    {
-        if (CurrentState == PlayerStates.AtRest) {
-            CurrentLungCapacity += RateOfBreathReplenishment*Time.deltaTime;
-        }
-        else if (CurrentState == PlayerStates.Blowing) {
-            CurrentLungCapacity -= CurrentRawBreathPressure;
-        }
-        CurrentLungCapacity = Mathf.Clamp(CurrentLungCapacity, 0, MaxLungCapacity);
     }
 
     private class AtRestState : PlayerState {
-        private const float percentageReducedWhileResting = 2.5f;
+        private const float percentageReducedWhileResting = 21.5f;
+        private const float RateOfBreathReplenishment = 26.4f;
 
         public override PlayerStates State
         {
@@ -143,11 +117,15 @@ public class PlayerMachine : MonoBehaviour {
             player.CurrentRawBreathPressure = Mathf.Clamp(
                 player.CurrentRawBreathPressure - (percentageReducedWhileResting*Time.deltaTime), 0,
                 MaxIntensity);
+            player.CurrentLungCapacity =
+                Mathf.Clamp(player.CurrentLungCapacity + (RateOfBreathReplenishment*Time.deltaTime), 0,
+                    MaxLungCapacity);
         }
     }
 
     private class BlowingState : PlayerState {
-        private const float additionalBlowValue = 24.8f;
+        private const float additionalBlowValue = 73.9f;
+        private const float blowVolumeUse = 110f;
 
         public override PlayerStates State
         {
@@ -157,7 +135,9 @@ public class PlayerMachine : MonoBehaviour {
         public override void Act(PlayerMachine player)
         {
             // they're holding down the button ...
-            StateLookup[PlayerStates.AtRest].Act(player);
+            player.CurrentLungCapacity =
+                Mathf.Clamp(player.CurrentLungCapacity - (blowVolumeUse*player.CurrentBreathPressure*Time.deltaTime), 0,
+                    MaxLungCapacity);
         }
 
         protected override void TransitionIntoState(PlayerMachine player)
