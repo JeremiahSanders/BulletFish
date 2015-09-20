@@ -35,10 +35,11 @@ public class FishMachine : MonoBehaviour {
     {
         const float blowingEffectPercentage = 0.64f;
         const float blowingFactor = 3.4f;
-        const float fearThreshold = 0.85f;
-        return pm.CurrentBreathPressure > fearThreshold
-            ? (BASE_SPEED*blowingEffectPercentage)*-1
-            : BASE_SPEED*blowingEffectPercentage*blowingFactor*pm.CurrentBreathPressure;
+        //const float fearThreshold = 0.85f;
+        //return pm.CurrentBreathPressure > fearThreshold
+        //    ? (BASE_SPEED*blowingEffectPercentage)*-1
+        //    : BASE_SPEED*blowingEffectPercentage*blowingFactor*pm.CurrentBreathPressure;
+        return BASE_SPEED*blowingEffectPercentage*blowingFactor*pm.CurrentBreathPressure;
     }
 
     private void OnCollisionEnter(Collision col)

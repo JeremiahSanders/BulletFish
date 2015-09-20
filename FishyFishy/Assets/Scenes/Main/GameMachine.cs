@@ -28,7 +28,11 @@ public class GameMachine : MonoBehaviour {
     }
 
     // Use this for initialization
-    private void Start() {}
+    private void Start()
+    {
+        // reset winners each time we fire up the scene
+        Winners.Clear();
+    }
 
     // Update is called once per frame
     private void Update() {}

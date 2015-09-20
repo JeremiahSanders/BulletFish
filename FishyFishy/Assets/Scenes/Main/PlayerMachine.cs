@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerMachine : MonoBehaviour {
+    public GameObject LungSlider;
     public enum PlayerIdentifier {
         Player1 = 0,
         Player2 = 1,
@@ -17,19 +18,17 @@ public class PlayerMachine : MonoBehaviour {
     }
 
     private const float MaxIntensity = 33.3f;
-    private const float MaxLungCapacity = 57.2f;
+    private const float MaxLungCapacity = 113.2f;
 
     public const string Player1Button = "Player1";
     public const string Player2Button = "Player2";
     public const string Player3Button = "Player3";
     public const string Player4Button = "Player4";
     private static readonly Dictionary<PlayerStates, PlayerState> StateLookup;
-    public Text BreathDisplay;
     public PlayerIdentifier Control = PlayerIdentifier.Player1;
 
     private PlayerState CurrentPlayerState = StateLookup[PlayerStates.AtRest];
     private float CurrentRawBreathPressure;
-    public Text LungDisplay;
 
     static PlayerMachine()
     {
@@ -105,12 +104,10 @@ public class PlayerMachine : MonoBehaviour {
 
     private void UpdateHud()
     {
-        if (BreathDisplay != null) {
-            BreathDisplay.text = String.Format("{0:P0}", CurrentBreathPressure);
-        }
-        if (LungDisplay != null) {
-            LungDisplay.text = String.Format("{0:P0}", LungCapacityPercentage);
-        }
+        if (LungSlider == null)return;
+        var slider = LungSlider.GetComponent<Slider>();
+        if(slider == null)return;
+        slider.value = LungCapacityPercentage;
     }
 
     private class AtRestState : PlayerState {
