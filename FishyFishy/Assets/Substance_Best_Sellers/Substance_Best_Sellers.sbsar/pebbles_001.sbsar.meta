@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: 0b1daee52d26fad469217d8a91468d7d
+timeCreated: 1442771621
+licenseType: Pro
 SubstanceImporter:
   serializedVersion: 5
   materialInstances:
@@ -7,7 +9,7 @@ SubstanceImporter:
     name: pebbles_001
     prototypeName: pebbles_001
     shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-    shaderKeywords: 
+    shaderKeywords: _NORMALMAP _PARALLAXMAP
     renderQueue: -1
     lightmapFlags: 5
     inputs:
@@ -196,7 +198,7 @@ SubstanceImporter:
     materialInformation:
       serializedVersion: 5
       offset: {x: 0, y: 0}
-      scale: {x: 1, y: 1}
+      scale: {x: 22, y: 22}
       generateMipmaps: 1
       generateAllOutputs: 0
       animationUpdateRate: 0
@@ -208,14 +210,14 @@ SubstanceImporter:
             name: _MainTex
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
+            scale: {x: 22, y: 22}
             offset: {x: 0, y: 0}
         data:
           first:
             name: _BumpMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
+            scale: {x: 22, y: 2}
             offset: {x: 0, y: 0}
         data:
           first:
@@ -229,7 +231,7 @@ SubstanceImporter:
             name: _ParallaxMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
+            scale: {x: 22, y: 2}
             offset: {x: 0, y: 0}
         data:
           first:
@@ -243,7 +245,7 @@ SubstanceImporter:
             name: _EmissionMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
+            scale: {x: 22, y: 22}
             offset: {x: 0, y: 0}
         data:
           first:
