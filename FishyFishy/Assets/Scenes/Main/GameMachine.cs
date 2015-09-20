@@ -67,36 +67,20 @@ public class GameMachine : MonoBehaviour {
     }
 
     private class GameStarting:GameState {
-        private static string[] ClipNames = new[] {
-                                                      IntroClip1,
-                                                      IntroClip2
-                                                  };
-        private const string IntroClip1 = "1a. And they're off!";
-        private const string IntroClip2 = "1b. Lets race boys and gills";
         public override void TransitionIn(GameMachine machine)
         {
             if (machine.AudioSource == null)return;
-            int clipIndex = Random.Range(0, (ClipNames.Length - 1));
-            string clipName = ClipNames[clipIndex];
-            Debug.Log("Playing "+clipName);
-            var clip = new AudioClip {name = clipName};
-            machine.AudioSource.PlayVoiceoverClip(clip);
+            machine.AudioSource.PlayRandomIntroClip();
         }
     }
 
     private class GameRunning : GameState {
-        private static string[] RandomClips = new[] {
-                                                        "back to school"
-                                                    };
         public override void Act(GameMachine machine)
         {
             if (machine.AudioSource == null) return;
-            var shouldPlaySound = Random.value > 0.97;
+            var shouldPlaySound = Random.value > 0.993;
             if (!shouldPlaySound)return;
-            int clipIndex = Random.Range(0, (RandomClips.Length - 1));
-            string clipName = RandomClips[clipIndex];
-            var clip = new AudioClip { name = clipName };
-            machine.AudioSource.PlayVoiceoverClip(clip);
+            machine.AudioSource.PlayRandomInGameQuip();
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Linq;
 using UnityEngine;
 
 public class AudioMachine : MonoBehaviour {
+    public AudioClip[] GameStartClips;
+    public AudioClip[] RandomInGameQuips;
     private readonly List<AudioClip> QueuedClips = new List<AudioClip>();
 
     private void PlaySound()
@@ -14,10 +16,15 @@ public class AudioMachine : MonoBehaviour {
         src.PlayOneShot(clip);
     }
 
-    public void PlayVoiceoverClip(AudioClip clip)
+    public void PlayRandomIntroClip()
     {
-        if (clip == null) return;
-        QueuedClips.Add(clip);
+        if (GameStartClips == null || !GameStartClips.Any()) return;
+        QueuedClips.Add(GetRandomClip(GameStartClips));
+    }
+
+    private AudioClip GetRandomClip(AudioClip[] audioClips)
+    {
+        return audioClips[Random.Range(0, (audioClips.Length))];
     }
 
     // Use this for initialization
@@ -29,5 +36,11 @@ public class AudioMachine : MonoBehaviour {
         var src = GetComponent<AudioSource>();
         if (src == null || src.isPlaying) return;
         PlaySound();
+    }
+
+    public void PlayRandomInGameQuip()
+    {
+        if (RandomInGameQuips == null || !RandomInGameQuips.Any()) return;
+        QueuedClips.Add(GetRandomClip(RandomInGameQuips));
     }
 }
