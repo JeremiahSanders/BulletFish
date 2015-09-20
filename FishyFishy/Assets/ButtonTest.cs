@@ -2,6 +2,17 @@
 using System.Collections;
 
 public class ButtonTest : MonoBehaviour {
+    public GameObject TutorialPanel;
+    public void TutorialButton()
+    {
+        Debug.Log("Tutorial button clicked");
+        if(TutorialPanel !=null)TutorialPanel.SetActive(true);
+    }
+
+    public void HideTutorial()
+    {
+        if (TutorialPanel != null) TutorialPanel.SetActive(false);
+    }
 
     public void PlayAgainButton()
     {
@@ -12,7 +23,7 @@ public class ButtonTest : MonoBehaviour {
     public void optionsButton()
     {
         Debug.Log("Options Button was pressed");
-        Application.LoadLevel("OptionsScene");
+        Application.LoadLevel("Options Scene_001");
     }
 
     public void mainMenuButton()
