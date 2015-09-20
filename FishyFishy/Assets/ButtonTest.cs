@@ -23,7 +23,7 @@ public class ButtonTest : MonoBehaviour {
 
     public void creditsButton()
     {
-        Debug.Log("Credits Button was pressed");
+        Debug.Log("Credits002 Button was pressed");
         Application.LoadLevel("Credit Scene_002");
     }
 
