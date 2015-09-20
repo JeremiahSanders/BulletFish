@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class FishMachine : MonoBehaviour {
     private const float BASE_SPEED = 0.045f;
-    private const float MAX_SPEED = 8f;
+    private const float MAX_SPEED = 3f;
     private const float SLOWDOWN_RATE = 0.27f;
     private float _currentSpeed;
     public GameObject PlayerController;
@@ -56,6 +57,7 @@ public class FishMachine : MonoBehaviour {
         if (other.gameObject != null && other.gameObject.GetComponent<FinishLine>() != null) {
             // reached the finish line
             shouldMove = false;
+            GetComponent<Animator>().speed = 0.3f;
         }
     }
 
@@ -67,6 +69,8 @@ public class FishMachine : MonoBehaviour {
         if (!shouldMove) return;
         var newSpeed = CreateSpeed();
         SwimLane.transform.Translate(0, newSpeed, 0);
+        float relativeSpeed = Mathf.Clamp(newSpeed*MAX_SPEED*15.2f, 0.3f, 6f);
+        GetComponent<Animator>().speed = relativeSpeed;
         _currentSpeed = newSpeed;
     }
 }

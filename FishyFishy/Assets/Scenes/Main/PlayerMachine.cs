@@ -29,8 +29,7 @@ public class PlayerMachine : MonoBehaviour {
 
     private PlayerState CurrentPlayerState = StateLookup[PlayerStates.AtRest];
     private float CurrentRawBreathPressure;
-
-    public GameObject FishModel;
+    public Text LungDisplay;
 
     static PlayerMachine()
     {
@@ -99,7 +98,10 @@ public class PlayerMachine : MonoBehaviour {
     private void UpdateHud()
     {
         if (BreathDisplay != null) {
-            BreathDisplay.text = String.Format("{1:P0} / {0:P0}", LungCapacityPercentage, CurrentBreathPressure);
+            BreathDisplay.text = String.Format("{0:P0}", CurrentBreathPressure);
+        }
+        if (LungDisplay != null) {
+            LungDisplay.text = String.Format("{0:P0}", LungCapacityPercentage);
         }
     }
 
@@ -124,7 +126,7 @@ public class PlayerMachine : MonoBehaviour {
     }
 
     private class BlowingState : PlayerState {
-        private const float additionalBlowValue = 73.9f;
+        private const float additionalBlowValue = 93.9f;
         private const float blowVolumeUse = 110f;
 
         public override PlayerStates State
