@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: b96218aa6422a6644b4ad1cdc9285cbb
-timeCreated: 1442763443
+timeCreated: 1442771601
 licenseType: Pro
 SubstanceImporter:
   serializedVersion: 5
@@ -114,7 +114,7 @@ SubstanceImporter:
     materialInformation:
       serializedVersion: 5
       offset: {x: 0, y: 0}
-      scale: {x: 4, y: 4}
+      scale: {x: 22, y: 22}
       generateMipmaps: 1
       generateAllOutputs: 0
       animationUpdateRate: 0
@@ -126,14 +126,14 @@ SubstanceImporter:
             name: _MainTex
           second:
             texture: {instanceID: 0}
-            scale: {x: 4, y: 4}
+            scale: {x: 22, y: 22}
             offset: {x: 0, y: 0}
         data:
           first:
             name: _BumpMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 4, y: 1}
+            scale: {x: 22, y: 22}
             offset: {x: 0, y: 0}
         data:
           first:
@@ -147,7 +147,7 @@ SubstanceImporter:
             name: _ParallaxMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 4, y: 1}
+            scale: {x: 22, y: 22}
             offset: {x: 0, y: 0}
         data:
           first:
@@ -161,7 +161,7 @@ SubstanceImporter:
             name: _EmissionMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 4, y: 4}
+            scale: {x: 22, y: 22}
             offset: {x: 0, y: 0}
         data:
           first:

@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: 5fa0274d50529ec41acfaed53f0cb1c4
+timeCreated: 1442772105
+licenseType: Pro
 SubstanceImporter:
   serializedVersion: 5
   materialInstances:
@@ -7,7 +9,7 @@ SubstanceImporter:
     name: sci_fi_004
     prototypeName: sci_fi_004
     shader: {fileID: 45, guid: 0000000000000000f000000000000000, type: 0}
-    shaderKeywords: 
+    shaderKeywords: _NORMALMAP _PARALLAXMAP _SPECGLOSSMAP
     renderQueue: -1
     lightmapFlags: 5
     inputs:
@@ -182,7 +184,7 @@ SubstanceImporter:
     materialInformation:
       serializedVersion: 5
       offset: {x: 0, y: 0}
-      scale: {x: 1, y: 1}
+      scale: {x: 20, y: 20}
       generateMipmaps: 1
       generateAllOutputs: 0
       animationUpdateRate: 0
@@ -194,14 +196,14 @@ SubstanceImporter:
             name: _MainTex
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
+            scale: {x: 20, y: 20}
             offset: {x: 0, y: 0}
         data:
           first:
             name: _BumpMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
+            scale: {x: 8, y: 20}
             offset: {x: 0, y: 0}
         data:
           first:
@@ -215,7 +217,7 @@ SubstanceImporter:
             name: _ParallaxMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
+            scale: {x: 8, y: 20}
             offset: {x: 0, y: 0}
         data:
           first:
@@ -229,7 +231,7 @@ SubstanceImporter:
             name: _EmissionMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
+            scale: {x: 20, y: 20}
             offset: {x: 0, y: 0}
         data:
           first:
@@ -250,7 +252,7 @@ SubstanceImporter:
             name: _SpecGlossMap
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
+            scale: {x: 8, y: 20}
             offset: {x: 0, y: 0}
       floats:
         data:
