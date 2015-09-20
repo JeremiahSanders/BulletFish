@@ -11,6 +11,11 @@ public class ScoreMachine : MonoBehaviour {
     public GameObject PlayerThreeFishSprite;
     public GameObject PlayerTwoFishSprite;
     public GameObject PlayerFourFishSprite;
+    public GameObject AudioPlayer;
+    private AudioMachine AudioMachine { get
+    {
+        return AudioPlayer == null ? null : AudioPlayer.GetComponent<AudioMachine>();
+    } }
 
     // Use this for initialization
     void Start () {
@@ -52,6 +57,8 @@ public class ScoreMachine : MonoBehaviour {
                     break;
             }
         }
+        if (AudioMachine==null)return;
+        AudioMachine.PlayRandomSomeoneWonQuip();
     }
 
     // Update is called once per frame

@@ -3,17 +3,20 @@ using System.Linq;
 using UnityEngine;
 
 public class AudioMachine : MonoBehaviour {
+    private readonly List<AudioClip> QueuedClips = new List<AudioClip>();
     public AudioClip[] GameStartClips;
     public AudioClip[] RandomInGameQuips;
-    private readonly List<AudioClip> QueuedClips = new List<AudioClip>();
+    public AudioClip[] SomeoneWonQuips;
 
-    private void PlaySound()
+    private AudioClip GetRandomClip(AudioClip[] audioClips)
     {
-        if (!QueuedClips.Any()) return;
-        var clip = QueuedClips[0];
-        QueuedClips.RemoveAt(0);
-        var src = GetComponent<AudioSource>();
-        src.PlayOneShot(clip);
+        return audioClips[Random.Range(0, (audioClips.Length))];
+    }
+
+    public void PlayRandomInGameQuip()
+    {
+        if (RandomInGameQuips == null || !RandomInGameQuips.Any()) return;
+        QueuedClips.Add(GetRandomClip(RandomInGameQuips));
     }
 
     public void PlayRandomIntroClip()
@@ -22,9 +25,19 @@ public class AudioMachine : MonoBehaviour {
         QueuedClips.Add(GetRandomClip(GameStartClips));
     }
 
-    private AudioClip GetRandomClip(AudioClip[] audioClips)
+    public void PlayRandomSomeoneWonQuip()
     {
-        return audioClips[Random.Range(0, (audioClips.Length))];
+        if (SomeoneWonQuips == null || !SomeoneWonQuips.Any()) return;
+        QueuedClips.Add(GetRandomClip(SomeoneWonQuips));
+    }
+
+    private void PlaySound()
+    {
+        if (!QueuedClips.Any()) return;
+        var clip = QueuedClips[0];
+        QueuedClips.RemoveAt(0);
+        var src = GetComponent<AudioSource>();
+        src.PlayOneShot(clip);
     }
 
     // Use this for initialization
@@ -36,11 +49,5 @@ public class AudioMachine : MonoBehaviour {
         var src = GetComponent<AudioSource>();
         if (src == null || src.isPlaying) return;
         PlaySound();
-    }
-
-    public void PlayRandomInGameQuip()
-    {
-        if (RandomInGameQuips == null || !RandomInGameQuips.Any()) return;
-        QueuedClips.Add(GetRandomClip(RandomInGameQuips));
     }
 }
