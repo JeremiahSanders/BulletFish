@@ -7,6 +7,7 @@ public class AudioMachine : MonoBehaviour {
     public AudioClip[] GameStartClips;
     public AudioClip[] RandomInGameQuips;
     public AudioClip[] SomeoneWonQuips;
+    public AudioClip[] MainMenuClips;
 
     private AudioClip GetRandomClip(AudioClip[] audioClips)
     {
@@ -29,6 +30,14 @@ public class AudioMachine : MonoBehaviour {
     {
         if (SomeoneWonQuips == null || !SomeoneWonQuips.Any()) return;
         QueuedClips.Add(GetRandomClip(SomeoneWonQuips));
+    }
+
+    public void PlayMainMenuClips()
+    {
+        if(MainMenuClips == null)return;
+        foreach (var clip in MainMenuClips) {
+            QueuedClips.Add(clip);
+        }
     }
 
     private void PlaySound()
