@@ -1,38 +1,30 @@
-﻿using System;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class GameMachine : MonoBehaviour {
-    private readonly PlayerMachine.PlayerIdentifier?[] _winners = new PlayerMachine.PlayerIdentifier?[4];
+    static GameMachine()
+    {
+        PlayerCount = 4;
+        Winners = new List<PlayerMachine.PlayerIdentifier>();
+    }
+
+    public static int PlayerCount { get; set; }
+    public static List<PlayerMachine.PlayerIdentifier> Winners { get; private set; }
 
     private void EveryoneFinished()
     {
         Debug.Log("Game Over -- Every Fish Completed!");
-        Debug.Log(String.Format("1st Place - {0}",_winners[0]));
-        Debug.Log(String.Format("2nd Place - {0}", _winners[1]));
-        Debug.Log(String.Format("3rd Place - {0}", _winners[2]));
-        Debug.Log(String.Format("4th Place - {0}", _winners[3]));
         Application.LoadLevel("Score Scene_003");
     }
 
     public void ReachedFinishLine(PlayerMachine.PlayerIdentifier player)
     {
-        if (_winners.Contains(player)) return;
-        if (_winners[0] == null) {
-            _winners[0] = player;
-            return;
+        if (Winners.Contains(player)) return;
+        Winners.Add(player);
+        if (Winners.Count == PlayerCount) {
+            // all winners are assigned, so game is over
+            EveryoneFinished();
         }
-        if (_winners[1] == null) {
-            _winners[1] = player;
-            return;
-        }
-        if (_winners[2] == null) {
-            _winners[2] = player;
-            return;
-        }
-        if (_winners[3] == null) _winners[3] = player;
-        // all winners are assigned, so game is over
-        EveryoneFinished();
     }
 
     // Use this for initialization
