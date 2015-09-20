@@ -41,7 +41,15 @@ public class PlayerMachine : MonoBehaviour {
 
     public float CurrentBreathPressure
     {
-        get { return CurrentRawBreathPressure <= 0 ? 0 : CurrentRawBreathPressure/MaxIntensity; }
+        get
+        {
+            var percentage =  CurrentRawBreathPressure <= 0 ? 0 : CurrentRawBreathPressure/MaxIntensity;
+            if (percentage <= 0) return 0;
+            if (percentage <= 0.25f) return 0.25f;
+            if (percentage <= 0.5f) return 0.5f;
+            if (percentage <= 0.75f) return 0.75f;
+            return 1f;
+        }
     }
 
     public float CurrentLungCapacity { get; private set; }
@@ -128,7 +136,7 @@ public class PlayerMachine : MonoBehaviour {
     private class BlowingState : PlayerState {
         private const float additionalBlowValue = 93.9f;
         private const float blowVolumeUse = 110f;
-
+        
         public override PlayerStates State
         {
             get { return PlayerStates.Blowing; }
